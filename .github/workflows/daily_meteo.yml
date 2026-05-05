@@ -1,0 +1,36 @@
+name: Execució diària de temperatures
+
+on:
+  schedule:
+    # L'hora està en UTC (23:59 UTC)
+    - cron: '59 23 * * *'
+  workflow_dispatch: # Permet executar-lo manualment des de la pestanya Actions
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout del codi
+      uses: actions/checkout@v3
+
+    - name: Configurar Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: Instal·lar dependències
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests
+
+    - name: Executar programa
+      run: python main.py
+
+    - name: Pujar el fitxer JSON al repositori
+      run: |
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git add temp_*.json
+        git commit -m "Afegit informe de temperatures del dia $(date +'%Y-%m-%d')" || echo "No hi ha canvis per pujar"
+        git push
