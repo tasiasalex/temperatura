@@ -2,7 +2,7 @@ name: Execució diària de temperatures
 
 on:
   schedule:
-    # L'hora està en UTC (23:59 UTC)
+    # (23:59 UTC)
     - cron: '59 23 * * *'
   workflow_dispatch: # Permet executar-lo manualment des de la pestanya Actions
 
